@@ -12,8 +12,6 @@ const kMODULE_NAME = "about:tor";
 const kMODULE_CONTRACTID = "@mozilla.org/network/protocol/about;1?what=tor";
 const kMODULE_CID = Components.ID("84d47da6-79c3-4661-aa9f-8049476f7bf5");
 
-const kAboutTorURL = "chrome://torbutton/content/aboutTor/aboutTor.xhtml";
-
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 const Cu = Components.utils;
@@ -37,6 +35,13 @@ AboutTor.prototype =
   // nsIAboutModule implementation:
   newChannel: function(aURI)
   {
+    var env = Cc["@mozilla.org/process/environment;1"]
+                .getService(Ci.nsIEnvironment);
+    if (env.exists("TOR_HOMEPAGE")) {
+       var kAboutTorURL = env.get("TOR_HOMEPAGE");
+    } else {
+       var kAboutTorURL = "chrome://torbutton/content/aboutTor/aboutTor.xhtml";
+    }
     let ioSvc = Cc["@mozilla.org/network/io-service;1"]
                   .getService(Ci.nsIIOService);
     let channel = ioSvc.newChannel(kAboutTorURL, null, null);
