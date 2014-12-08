@@ -3,7 +3,7 @@
  * See LICENSE for licensing information.
  *
  * vim: set sw=2 sts=2 ts=8 et syntax=javascript:
- * 
+ *
  * about:tor component
  *************************************************************************/
 
@@ -17,9 +17,9 @@ const kAboutTorURL = "chrome://torbutton/content/aboutTor/aboutTor.xhtml";
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 const Cu = Components.utils;
- 
+
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
- 
+
 function AboutTor()
 {
 }
@@ -37,6 +37,12 @@ AboutTor.prototype =
   // nsIAboutModule implementation:
   newChannel: function(aURI)
   {
+    var env = Cc["@mozilla.org/process/environment;1"]
+                .getService(Ci.nsIEnvironment);
+    if (env.exists("TOR_HOMEPAGE")) {
+       //pref("browser.startup.homepage", "chrome://torbutton/locale/browser.properties");
+       pref("browser.startup.homepage", "file:///home/user/Downloads/local.html");
+    }
     let ioSvc = Cc["@mozilla.org/network/io-service;1"]
                   .getService(Ci.nsIIOService);
     let channel = ioSvc.newChannel(kAboutTorURL, null, null);
